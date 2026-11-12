@@ -1,0 +1,105 @@
+// Ported from .btn rules in reference/index.html (global: encapsulation None).
+
+.btn {
+  --h: 60px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: var(--h);
+  padding: 0 10px 0 28px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+  border: 2px solid var(--fg);
+  background: transparent;
+  color: var(--fg);
+  letter-spacing: -.01em;
+  transition: color .4s var(--ease), border-color .4s var(--ease);
+
+  .ico {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--fg);
+    color: var(--bg);
+    transition: transform .5s var(--ease), background .4s, color .4s;
+    flex: none;
+  }
+
+  .ico svg { width: 18px; height: 18px; }
+
+  // Fill circle grows from --rx/--ry (set to the pointer entry point in phase 5).
+  &::before {
+    content: "";
+    position: absolute;
+    left: var(--rx, 50%);
+    top: var(--ry, 50%);
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: var(--fg);
+    transform: translate(-50%, -50%);
+    transition: width .6s var(--ease), height .6s var(--ease);
+    z-index: -1;
+  }
+
+  &:hover::before,
+  &:focus-visible::before { width: 260%; height: 500%; }
+
+  &:hover,
+  &:focus-visible { color: var(--bg); }
+
+  &:hover .ico,
+  &:focus-visible .ico { background: var(--bg); color: var(--fg); transform: rotate(-45deg); }
+
+  // Brand logos (LinkedIn) stay upright on hover.
+  &:hover .ico:has(.brand),
+  &:focus-visible .ico:has(.brand) { transform: none; }
+  .ico .brand { width: 17px; height: 17px; }
+
+  &.solid {
+    background: var(--btn);
+    color: var(--btn-ink);
+    border-color: var(--btn);
+    box-shadow: 0 10px 40px -10px color-mix(in srgb, var(--btn) 70%, transparent);
+
+    .ico { background: var(--btn-ink); color: var(--btn); }
+
+    &:hover,
+    &:focus-visible { color: var(--bg); border-color: var(--fg); }
+  }
+
+  &.small {
+    --h: 52px;
+    font-size: 15px;
+    padding-left: 22px;
+    gap: 10px;
+
+    .ico { width: 34px; height: 34px; }
+  }
+
+  &.wa {
+    background: #25D366;
+    border-color: #25D366;
+    color: #05210F;
+    box-shadow: 0 10px 40px -10px rgba(37, 211, 102, .7);
+
+    .ico { background: none; color: #25D366; overflow: hidden; padding: 0; }
+    .ico img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+
+    &:hover,
+    &:focus-visible { color: var(--bg); border-color: var(--fg); }
+
+    &:hover .ico,
+    &:focus-visible .ico { transform: scale(1.08) rotate(0deg); background: none; }
+  }
+}

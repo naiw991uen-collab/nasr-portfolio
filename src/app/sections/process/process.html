@@ -1,0 +1,20 @@
+<section class="sec process" id="process">
+  <div class="wrap">
+    <div class="head">
+      <h2 class="h2 reveal-title"><span class="line"><span>How I</span></span><span class="line"><span>build</span></span></h2>
+      <p>Three habits you can see in the code of every project above.</p>
+    </div>
+    <div class="stack-cards">
+      @for (c of cards; track c.k) {
+        <article class="scard">
+          <div class="k" aria-hidden="true">{{ c.k }}</div>
+          <div>
+            <h3>{{ c.title }}</h3>
+            <p>{{ c.body }}</p>
+            <code appScramble>{{ c.code }}</code>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

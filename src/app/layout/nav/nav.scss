@@ -1,0 +1,132 @@
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 70;
+  background: var(--btn);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding-top: env(safe-area-inset-top, 0px);
+  // Page-coloured background with a light blur so content doesn't show through.
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.nav-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 18px;
+}
+
+.logo {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 24px;
+  text-decoration: none;
+  letter-spacing: -.03em;
+
+  b { color: var(--accent); }
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+
+  a {
+    text-decoration: none;
+    position: relative;
+    padding-block: 6px;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 1px;
+      width: 100%;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .5s var(--ease);
+    }
+
+    &:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
+
+  @media (max-width: 760px) { display: none; }
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.palette {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: blur(10px);
+
+  button {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    padding: 0;
+    cursor: pointer;
+    transition: transform .3s var(--ease);
+
+    &:hover { transform: scale(1.15); }
+    &[aria-pressed="true"] { border-color: var(--fg); }
+  }
+}
+
+// Small "CV ↓" download pill, same thin outline + mono as the palette group.
+.cv {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding-inline: 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  font-size: 13px;
+  letter-spacing: .08em;
+  text-decoration: none;
+  transition: border-color .3s, color .3s;
+
+  svg { width: 15px; height: 15px; flex: none; }
+
+  &:hover { border-color: var(--fg); color: var(--accent2); }
+
+  // Mobile: icon only so the header stays clear.
+  @media (max-width: 760px) {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+
+    .cv-lbl { display: none; }
+  }
+}

@@ -1,0 +1,24 @@
+@if (visible()) {
+  <div class="loader" #root role="status" aria-label="Loading portfolio">
+    <div class="ld-cols back" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="ld-cols front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="ld-ui" aria-hidden="true">
+      <div class="ld-top mono"><span>Nasr Mohamed</span><span>Portfolio ©2026</span></div>
+      <div class="ld-mid">
+        <svg class="ld-mark" viewBox="0 0 200 110">
+          <path d="M10 100V10l55 90V10" />
+          <path d="M90 100V10l40 55 40-55v90" />
+          <circle class="dotm" cx="190" cy="98" r="7" />
+        </svg>
+        <div class="ld-log" #log><span>&gt; booting portfolio<i class="caret"></i></span></div>
+      </div>
+      <div>
+        <div class="ld-bottom">
+          <span class="mono">Loading projects</span>
+          <div class="ld-count"><span #count>00</span><sup>%</sup></div>
+        </div>
+        <div class="ld-line"><i></i></div>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,29 @@
+<div class="progress" #bar aria-hidden="true"></div>
+
+<header class="nav" #header>
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="Nasr Mohamed, back to top">NM<b>.</b></a>
+    <nav class="nav-links mono" aria-label="Sections">
+      @for (l of links; track l.href) {
+        <a [href]="l.href" appScramble>{{ l.label }}</a>
+      }
+    </nav>
+    <div class="nav-right">
+      <a class="cv mono" appMagnetic [href]="cv" download="Nasr-Mohamed-CV.pdf" aria-label="Download CV (PDF)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14" /></svg>
+        <span class="cv-lbl">CV</span>
+      </a>
+      <div class="palette" role="group" aria-label="Color theme">
+        @for (p of palettes; track p.id) {
+          <button
+            type="button"
+            [attr.aria-label]="p.label"
+            [attr.aria-pressed]="theme.palette() === p.id"
+            [style.background]="p.swatch"
+            (click)="theme.set(p.id)"
+          ></button>
+        }
+      </div>
+    </div>
+  </div>
+</header>

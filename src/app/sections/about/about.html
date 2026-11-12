@@ -1,0 +1,41 @@
+<section class="sec" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <figure class="portrait">
+        <div class="frame">
+          <img
+            src="assets/img/me.webp"
+            srcset="assets/img/me-480.webp 480w, assets/img/me.webp 800w"
+            sizes="(max-width: 472px) calc(100vw - 32px), 440px"
+            width="800"
+            height="1000"
+            alt="Portrait of Nasr Mohamed"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <figcaption><b>Nasr Mohamed</b><span>Full-stack developer</span></figcaption>
+        <app-badge class="badge" pathId="badge-about" />
+      </figure>
+
+      <div>
+        <p class="mono kicker">( About )</p>
+        <p class="about-text">
+          @for (s of segments; track $index) {
+            @if (s.em) {
+              <em>@for (w of s.words; track $index) {<span class="w">{{ w }}</span>}</em>
+            } @else {
+              @for (w of s.words; track $index) {<span class="w">{{ w }}</span>}
+            }
+          }
+        </p>
+      </div>
+    </div>
+
+    <div class="facts">
+      @for (f of facts; track f[0]) {
+        <div class="fact"><span>{{ f[0] }}</span><span>{{ f[1] }}</span></div>
+      }
+    </div>
+  </div>
+</section>

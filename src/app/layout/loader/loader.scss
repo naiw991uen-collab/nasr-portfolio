@@ -1,0 +1,115 @@
+:host { display: contents; }
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  color: var(--fg);
+}
+
+.ld-cols {
+  position: absolute;
+  inset: 0;
+  display: flex;
+
+  i { flex: 1; display: block; background: var(--bg); margin-right: -1px; }
+  &.back i { background: var(--accent); }
+}
+
+.ld-ui {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: max(24px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(24px, env(safe-area-inset-left, 0px));
+}
+
+.ld-top { display: flex; justify-content: space-between; gap: 16px; color: var(--muted); }
+
+.ld-mid { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+
+.ld-mark {
+  width: min(240px, 46vw);
+  height: auto;
+  overflow: visible;
+
+  path { fill: none; stroke: var(--fg); stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; transition: stroke .4s; }
+  .dotm { fill: var(--accent); stroke: none; }
+}
+
+.loader.done .ld-mark path { stroke: var(--accent); }
+
+.ld-log {
+  height: 1.6em;
+  overflow: hidden;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .04em;
+  text-align: center;
+}
+
+// Log lines are created with document.createElement, so they don't carry this
+// component's style attribute: reach them with :host ::ng-deep, still scoped to the loader.
+:host ::ng-deep {
+  .ld-log span { display: block; line-height: 1.6em; }
+  .ld-log b { color: var(--accent2); font-weight: 500; }
+  .ld-log .caret {
+    display: inline-block;
+    width: .6em;
+    height: 1em;
+    background: var(--accent2);
+    vertical-align: -2px;
+    margin-left: 4px;
+    animation: blink 1s steps(1) infinite;
+  }
+}
+
+.ld-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+
+  .mono { color: var(--muted); padding-bottom: 12px; }
+}
+
+.ld-count {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(64px, 13vw, 190px);
+  line-height: .8;
+  letter-spacing: -.05em;
+  font-variant-numeric: tabular-nums;
+  // Fixed box (em of its own size): the web font swapping in or "00" → "100" can't move it (CLS).
+  flex: none;
+  width: 2.8em;
+  text-align: right;
+  white-space: nowrap;
+  // The % sits in a fixed corner (not in the text flow), so font metrics can't move it either.
+  position: relative;
+  padding-right: .34em;
+
+  sup { position: absolute; top: 0; right: 0; font-size: .28em; line-height: 1; color: var(--accent); letter-spacing: 0; }
+}
+
+.ld-line {
+  height: 2px;
+  background: var(--line);
+  margin-top: 20px;
+  overflow: hidden;
+
+  i {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+}
+
+// No motion wanted: never show the loader (also before JS decides).
+@media (prefers-reduced-motion: reduce) {
+  .loader { display: none; }
+}

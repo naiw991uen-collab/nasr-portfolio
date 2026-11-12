@@ -1,0 +1,49 @@
+// Design tokens: copied verbatim from the :root blocks in reference/index.html.
+// Palette is chosen with data-palette on <html> (no attribute = aurora).
+
+:root {
+  --bg: #08080F;
+  --surface: #11111C;
+  --line: #232338;
+  --fg: #ECEBFF;
+  --muted: #9A98B8;
+  --accent: #7B61FF;
+  --accent2: #2EE6C5;
+  --on-accent: #FFFFFF;
+  --btn: #2EE6C5;
+  --btn-ink: #04120F;
+  // Variable builds of the same typefaces (one file per family, all weights): fewer, smaller requests.
+  --display: "Syne Variable", "Syne", "Space Grotesk", system-ui, sans-serif;
+  --body: "Manrope Variable", "Manrope", "Inter", system-ui, sans-serif;
+  --mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  color-scheme: dark;
+}
+
+:root[data-palette="ember"] {
+  --bg: #0E0907;
+  --surface: #1A120E;
+  --line: #33241C;
+  --fg: #F7EEE6;
+  --muted: #B39F92;
+  --accent: #FF6A2B;
+  --accent2: #FFC24B;
+  --on-accent: #140A05;
+  --btn: #FFC24B;
+  --btn-ink: #1A0E00;
+  color-scheme: dark;
+}
+
+:root[data-palette="paper"] {
+  --bg: #EEEAE2;
+  --surface: #E4DFD5;
+  --line: #CFC8BB;
+  --fg: #15141B;
+  --muted: #5E5A54;
+  --accent: #2B3BFF;
+  --accent2: #FF4F2B;
+  --on-accent: #FFFFFF;
+  --btn: #2B3BFF;
+  --btn-ink: #FFFFFF;
+  color-scheme: light;
+}

@@ -1,0 +1,53 @@
+.contact {
+  border-top: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 0; // footer continues this band
+}
+
+.kicker { color: var(--accent); margin: 0; }
+
+.big {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(44px, 10.5vw, 176px);
+  line-height: .9;
+  letter-spacing: -.06em;
+  margin: 24px 0 0;
+  text-transform: uppercase;
+  text-wrap: balance;
+
+  .wd { display: inline-block; white-space: nowrap; }
+
+  .ch {
+    display: inline-block;
+    transition: transform .5s var(--ease), color .3s;
+
+    &:hover { transform: translateY(-12%) rotate(-4deg); color: var(--accent); }
+  }
+
+  .period { color: var(--accent); }
+}
+
+.mail {
+  display: flex;
+  align-items: center;
+  gap: 20px 28px;
+  flex-wrap: wrap;
+  margin-top: 72px;
+  padding-top: 40px;
+  border-top: 1px solid var(--line);
+  position: relative;
+  z-index: 1;
+
+  code {
+    font-family: var(--mono);
+    font-size: clamp(18px, 2.6vw, 32px);
+    overflow-wrap: anywhere;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 4px;
+    user-select: all;
+  }
+}
+
+.mail-label { flex-basis: 100%; color: var(--muted); }

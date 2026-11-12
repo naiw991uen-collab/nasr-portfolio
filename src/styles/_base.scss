@@ -1,0 +1,196 @@
+// Global base styles, ported from reference/index.html.
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background .6s var(--ease), color .6s var(--ease);
+}
+
+// Keeps content from showing under the notch / status bar on iOS.
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 60;
+  background: var(--bg);
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent2);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.wrap {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+
+  @media (min-width: 700px) {
+    padding-left: max(40px, env(safe-area-inset-left, 0px));
+    padding-right: max(40px, env(safe-area-inset-right, 0px));
+  }
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 55;
+  opacity: .07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+// Shared keyframes used by several components.
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+// Section shells shared by Work / Process / Stack.
+.sec {
+  padding-block: clamp(88px, 12vw, 160px);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-bottom: 56px;
+
+  p {
+    max-width: 380px;
+    color: var(--muted);
+    margin: 0;
+  }
+}
+
+.h2 {
+  font-family: var(--display);
+  font-weight: 800;
+  // Reference floor is 48px, which makes one-word lines ("SELECTED") overflow at 390px.
+  font-size: clamp(40px, 8vw, 124px);
+  line-height: .9;
+  letter-spacing: -.05em;
+  margin: 0;
+  text-transform: uppercase;
+  text-wrap: balance;
+
+  .line { display: block; overflow: hidden; }
+  .line > span { display: inline-block; }
+
+  sup {
+    font-family: var(--mono);
+    font-size: 16px;
+    color: var(--accent);
+    letter-spacing: 0;
+    vertical-align: top;
+    margin-left: 8px;
+  }
+}
+
+.btns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+// Lines measured by the fit-text directive.
+.fit-line {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+// Lenis smooth scroll (classes it puts on <html>).
+html.lenis,
+html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+// Arabic must never be letter-spaced: spacing breaks the joined letter forms.
+[lang="ar"],
+[lang="ar"] * { letter-spacing: 0 !important; }
+
+// Custom cursor active (fine pointers only): hide the system cursor.
+@media (pointer: fine) {
+  body.has-cursor,
+  body.has-cursor a,
+  body.has-cursor button { cursor: none; }
+}
+
+// Visually hidden, still read by screen readers.
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+// "Skip to content": hidden until focused with the keyboard.
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 110; // above the loader
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--btn);
+  color: var(--btn-ink);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform .3s var(--ease);
+
+  &:focus-visible { transform: none; }
+}
+
+// Sections focused after an in-page jump: no outline box around the whole section.
+main:focus,
+section[tabindex="-1"]:focus { outline: none; }

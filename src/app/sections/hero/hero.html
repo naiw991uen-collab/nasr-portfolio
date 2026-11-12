@@ -1,0 +1,63 @@
+<section class="hero" id="top">
+  <canvas class="aurora" aria-hidden="true"></canvas>
+
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <div class="hero-top mono">
+        <span>( Full-stack developer )</span>
+        <span class="status"><i></i>Open to work</span>
+      </div>
+
+      <h1 class="name" aria-label="Nasr Mohamed" appFitText [fitMax]="170" (fitted)="anim.refresh()">
+        <span class="row" aria-hidden="true"
+          ><span class="fit-line"
+            ><span class="split">@for (c of first; track $index) {<span class="ch">{{ c }}</span>}</span></span
+          ></span
+        >
+        <span class="row" aria-hidden="true"
+          ><span class="fit-line"
+            ><span class="split outline">@for (c of last; track $index) {<span class="ch">{{ c }}</span>}</span
+            ><span class="split dot"><span class="ch">.</span></span></span
+          ></span
+        >
+      </h1>
+
+      <div class="hero-bottom">
+        <p class="lede">
+          I build web apps end to end.<br />Right now that means
+          <!-- The typewriter is visual only; screen readers get one stable sentence instead. -->
+          <span class="type" aria-hidden="true">Angular front ends</span><span class="tcaret" aria-hidden="true"></span
+          ><span class="sr-only">Angular front ends, .NET 9 back ends, real business rules and apps people actually use.</span>
+        </p>
+        <div class="btns">
+          <a appBtn variant="solid" icon="down" href="#work">See my work</a>
+          <a appBtn icon="arrow" [href]="links.github">GitHub</a>
+          <a appBtn icon="linkedin" [href]="links.linkedin" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in a new tab)">LinkedIn</a>
+          <a appBtn variant="wa" icon="wa" [href]="links.whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp (opens in a new tab)">WhatsApp</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-me" aria-hidden="true">
+      <div class="disc"></div>
+      <div class="ring"></div>
+      <img
+        class="me-cut"
+        src="assets/img/me-cut.webp"
+        srcset="assets/img/me-cut-300.webp 300w, assets/img/me-cut-480.webp 480w, assets/img/me-cut.webp 900w"
+        sizes="(max-width: 860px) 130px, 240px"
+        width="900"
+        height="2621"
+        alt=""
+        fetchpriority="high"
+      />
+      <app-badge class="badge" pathId="badge-hero" />
+    </div>
+  </div>
+
+  <div class="wrap hero-strip mono">
+    <span>Building with <b>Angular 20 + .NET 9</b></span>
+    <span class="hide-sm"><b>04</b> projects · <b>04</b> live demos</span>
+    <span class="scroll-hint">Scroll to explore <i aria-hidden="true"></i></span>
+  </div>
+</section>

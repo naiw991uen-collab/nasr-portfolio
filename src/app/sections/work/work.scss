@@ -1,0 +1,252 @@
+.work { padding-bottom: 40px; }
+
+// Until the GSAP pin takes over (phase 4) the track scrolls natively, so panels
+// stay reachable without JS and with reduced motion. The pin adds .is-pinned.
+.work-pin {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+
+  &.is-pinned { overflow: hidden; }
+}
+
+.work-track {
+  display: flex;
+  gap: 32px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 8px 40px;
+  width: max-content;
+}
+
+.panel {
+  width: min(1080px, 84vw);
+  flex: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--surface);
+  min-height: 560px;
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(36px, 4.2vw, 64px);
+    letter-spacing: -.05em;
+    line-height: .9;
+    margin: 16px 0;
+  }
+
+  p { margin: 0; color: color-mix(in srgb, var(--fg) 82%, var(--bg)); }
+}
+
+.panel-info {
+  padding: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+  min-width: 0;
+}
+
+.panel-meta {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+
+  b { color: var(--accent2); font-weight: 500; }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+
+  span {
+    font-family: var(--mono);
+    font-size: 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 12px;
+    color: var(--muted);
+  }
+}
+
+/* Demo login */
+.demo-login {
+  margin-top: 20px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--bg) 45%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dl-title { font-size: 11px; color: var(--accent2); }
+
+.dl-row {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.dl-label { font-size: 11px; color: var(--muted); }
+
+.dl-value {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.dl-copy {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color .3s, border-color .3s, background .3s;
+
+  svg { width: 14px; height: 14px; }
+
+  &:hover,
+  &:focus-visible { color: var(--fg); border-color: var(--fg); }
+
+  &.done { color: var(--btn-ink); background: var(--btn); border-color: var(--btn); }
+}
+
+// Phones: label above the value so long values (the gym email) stay on one line.
+@media (max-width: 480px) {
+  .demo-login { gap: 10px; }
+  .dl-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "label copy" "value copy";
+    gap: 2px 10px;
+  }
+  .dl-label { grid-area: label; }
+  .dl-value { grid-area: value; }
+  .dl-copy { grid-area: copy; }
+}
+
+.panel-view {
+  position: relative;
+  background: color-mix(in srgb, var(--surface) 50%, var(--bg));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px;
+  overflow: hidden;
+  min-width: 0;
+
+  .glow {
+    position: absolute;
+    width: 70%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--accent);
+    filter: blur(90px);
+    opacity: .28;
+
+    &.alt { background: var(--accent2); }
+  }
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--bg);
+  overflow: hidden;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .6);
+
+  img.shot {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 1.2s var(--ease);
+  }
+}
+
+.panel:hover .screen img.shot { transform: scale(1.04); }
+
+.screen-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+
+  i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+
+  span { margin-inline-start: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+}
+
+/* LevelUp mock */
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px;
+  direction: rtl;
+  font-family: var(--body);
+}
+
+.room {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  small { color: var(--muted); font-size: 12px; }
+
+  // Shrinks on phones so 8 mono digits fit the card; stays 24px on desktop.
+  .t { font-family: var(--mono); font-size: clamp(14px, 4.4vw, 24px); font-variant-numeric: tabular-nums; color: var(--muted); }
+
+  // Arabic "available" label: JetBrains Mono has no Arabic, and its monospace fallback
+  // draws each letter at the same width (looks separated). Use the body stack (system Arabic font).
+  .t.free { font-family: var(--body); }
+
+  &.on { border-color: var(--accent2); }
+  &.on .t { color: var(--accent2); }
+}
+
+.work-progress {
+  height: 2px;
+  background: var(--line);
+  margin-top: 8px;
+
+  i {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+}
+
+@media (max-width: 899px) {
+  .work-pin { overflow: visible; }
+  .work-track { flex-direction: column; width: auto; }
+  .panel { width: 100%; grid-template-columns: 1fr; min-height: 0; }
+  .panel-info { padding: 28px; }
+  .work-progress { display: none; }
+}

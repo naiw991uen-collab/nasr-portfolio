@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Nasr Mohamed — Full-stack Developer</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Nasr Mohamed is a full-stack developer building Angular 20 front ends and ASP.NET Core (.NET 9) back ends. Live projects: LevelUp, Meals, Power Fitness and Categories.">
+  <meta name="author" content="Nasr Mohamed">
+  <meta name="theme-color" content="#08080F">
+
+  <!-- Open Graph / social preview. og:url and an absolute og:image URL are set in phase 7 (deploy), once the domain exists. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Nasr Mohamed">
+  <meta property="og:title" content="Nasr Mohamed — Full-stack Developer">
+  <meta property="og:description" content="Angular 20 front ends and .NET 9 back ends. Four projects, four live demos.">
+  <meta property="og:image" content="/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Nasr Mohamed — Full-stack Developer, portfolio hero">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nasr Mohamed — Full-stack Developer">
+  <meta name="twitter:description" content="Angular 20 front ends and .NET 9 back ends. Four projects, four live demos.">
+  <meta name="twitter:image" content="/og-image.jpg">
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Nasr Mohamed",
+      "jobTitle": "Full-stack Developer",
+      "knowsAbout": ["Angular", "TypeScript", "C#", "ASP.NET Core", ".NET 9", "Entity Framework Core"],
+      "sameAs": ["https://github.com/naiw991uen-collab"]
+    }
+  </script>
+  <!-- PNG fallback first; browsers that support SVG icons pick the SVG. -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <script>
+    // Every refresh starts at the top (so the intro is seen): the browser must not restore
+    // the old scroll position. Set here, before the page renders, so restoration never happens.
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  </script>
+  <script>
+    // Apply the saved palette before first paint (no flash of the default theme).
+    try {
+      var p = localStorage.getItem('palette');
+      if (p === 'ember' || p === 'paper') document.documentElement.setAttribute('data-palette', p);
+    } catch (e) {}
+  </script>
+  <script>
+    // Let scroll/wheel/touch listeners bypass zone.js. Zone merges listeners of one event type
+    // into a single native listener, so ScrollTrigger's passive wheel listener made Lenis's
+    // passive:false one passive too (console errors, no preventDefault). Also saves change
+    // detection on every scroll frame. No template binds to these events.
+    window.__zone_symbol__UNPATCHED_EVENTS = ['scroll', 'wheel', 'touchstart', 'touchmove', 'touchend'];
+  </script>
+  <!-- Without JS the loader would never leave: hide it. -->
+  <noscript><style>.loader { display: none !important; }</style></noscript>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
