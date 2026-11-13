@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, ElementRef, NgZone, OnDestroy, afterNextRender, inject, viewChild } from '@angular/core';
 import { gsap } from 'gsap';
 import { AnimationService } from '../../core/animation.service';
+import { I18nService } from '../../core/i18n.service';
 
 const VIEW_TARGET = '[data-cursor="view"] .panel-view';
 
@@ -14,7 +15,7 @@ const VIEW_TARGET = '[data-cursor="view"] .panel-view';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="cursor" #dot aria-hidden="true"></div>
-    <div class="cursor-ring" #ring aria-hidden="true"><span>VIEW</span></div>
+    <div class="cursor-ring" #ring aria-hidden="true"><span>{{ t().cursor.view }}</span></div>
   `,
   styles: `
     :host { display: contents; }
@@ -29,7 +30,7 @@ const VIEW_TARGET = '[data-cursor="view"] .panel-view';
     .cursor-ring {
       width: 40px; height: 40px; border: 1px solid var(--fg);
       align-items: center; justify-content: center;
-      font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--on-accent);
+      font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--on-accent);
       transition: width .4s var(--ease), height .4s var(--ease), background .3s, border-color .3s, opacity .3s;
     }
     .cursor-ring.view { width: 96px; height: 96px; background: var(--accent); border-color: var(--accent); }
@@ -39,6 +40,7 @@ const VIEW_TARGET = '[data-cursor="view"] .panel-view';
 })
 export class Cursor implements OnDestroy {
   private readonly anim = inject(AnimationService);
+  protected readonly t = inject(I18nService).t;
   private readonly doc = inject(DOCUMENT);
   private readonly zone = inject(NgZone);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;

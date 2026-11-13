@@ -1,10 +1,10 @@
 <section class="sec work" id="work">
   <div class="wrap head">
     <h2 class="h2 reveal-title">
-      <span class="line"><span>Selected</span></span>
-      <span class="line"><span>work<sup>({{ total }})</sup></span></span>
+      <span class="line"><span>{{ t().work.title1 }}</span></span>
+      <span class="line"><span>{{ t().work.title2 }}<sup>({{ total }})</sup></span></span>
     </h2>
-    <p>Four projects. Each one started from a real problem, from billing a PlayStation lounge by the minute to browsing recipes behind a login.</p>
+    <p>{{ t().work.intro }}</p>
   </div>
 
   <div class="work-pin">
@@ -13,26 +13,26 @@
         <article class="panel" data-cursor="view">
           <div class="panel-info">
             <div>
-              <div class="panel-meta mono"><span appScramble>Project {{ i + 1 }} of {{ projects.length }}</span><b>● {{ p.status }}</b></div>
+              <div class="panel-meta mono"><span appScramble>{{ projectOf(i) }}</span><b>● {{ text(p).status }}</b></div>
               <h3>{{ p.title }}</h3>
-              <p>{{ p.description }}</p>
+              <p>{{ text(p).description }}</p>
               <div class="tags">
-                @for (t of p.tags; track t) {
-                  <span>{{ t }}</span>
+                @for (tag of text(p).tags; track tag) {
+                  <span>{{ tag }}</span>
                 }
               </div>
 
-              <div class="demo-login" role="group" [attr.aria-label]="'Demo login for ' + p.title">
-                <span class="dl-title mono">Demo login</span>
+              <div class="demo-login" role="group" [attr.aria-label]="i18n.fmt(t().work.demoLoginAria, { title: p.title })">
+                <span class="dl-title mono">{{ t().work.demoLogin }}</span>
                 @for (f of loginFields(p); track f.key) {
                   <div class="dl-row">
                     <span class="dl-label mono">{{ f.label }}</span>
-                    <code class="dl-value" #val>{{ f.value }}</code>
+                    <code class="dl-value" #val dir="ltr">{{ f.value }}</code>
                     <button
                       type="button"
                       class="dl-copy"
                       [class.done]="copied() === f.key"
-                      [attr.aria-label]="copied() === f.key ? f.label + ' copied' : 'Copy ' + f.label.toLowerCase()"
+                      [attr.aria-label]="copyAria(f.key, f.label)"
                       (click)="copy(f.key, f.value, val)"
                     >
                       @if (copied() === f.key) {
@@ -47,18 +47,18 @@
             </div>
             <div class="btns">
               <a appBtn variant="solid" [icon]="p.primary.icon" [href]="p.primary.href ?? '#work'" target="_blank" rel="noopener noreferrer"
-                [attr.aria-label]="p.title + ' — ' + p.primary.label + ' (opens in a new tab)'">{{ p.primary.label }}</a>
+                [attr.aria-label]="p.title + ' — ' + t().work.liveDemo + ' ' + t().common.newTab">{{ t().work.liveDemo }}</a>
               <a appBtn size="small" icon="code" [href]="p.code ?? '#work'" target="_blank" rel="noopener noreferrer"
-                [attr.aria-label]="p.title + ' — Code on GitHub (opens in a new tab)'">Code</a>
+                [attr.aria-label]="p.title + ' — ' + t().work.codeAria + ' ' + t().common.newTab">{{ t().work.code }}</a>
             </div>
           </div>
 
           <div class="panel-view">
             <div class="glow" [class.alt]="p.screen.glow === 'accent2'"></div>
             <div class="screen">
-              <div class="screen-bar"><i></i><i></i><i></i><span>{{ p.screen.label }}</span></div>
+              <div class="screen-bar"><i></i><i></i><i></i><span dir="ltr">{{ p.screen.label }}</span></div>
               @if (p.screen.mock === 'levelup') {
-                <div class="rooms" lang="ar" role="img" aria-label="LevelUp devices screen with three running sessions">
+                <div class="rooms" lang="ar" role="img" [attr.aria-label]="t().work.levelupAria">
                   @for (r of rooms(); track r.name) {
                     <div class="room" [class.on]="r.on">
                       <small>{{ r.name }}</small><span class="t" [class.free]="!r.on">{{ r.time }}</span><small>{{ r.sub }}</small>
@@ -73,7 +73,7 @@
                   sizes="(max-width: 899px) calc(100vw - 74px), 560px"
                   [width]="img.width"
                   [height]="img.height"
-                  [alt]="img.alt"
+                  [alt]="text(p).alt"
                   loading="lazy"
                   decoding="async"
                 />

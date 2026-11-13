@@ -4,19 +4,19 @@
   <div class="wrap hero-grid">
     <div class="hero-text">
       <div class="hero-top mono">
-        <span>( Full-stack developer )</span>
-        <span class="status"><i></i>Open to work</span>
+        <span>{{ t().hero.role }}</span>
+        <span class="status"><i></i>{{ t().hero.status }}</span>
       </div>
 
-      <h1 class="name" aria-label="Nasr Mohamed" appFitText [fitMax]="170" (fitted)="anim.refresh()">
+      <h1 class="name" [attr.aria-label]="t().hero.nameAria" appFitText [fitMax]="i18n.rtl() ? 110 : 170" (fitted)="anim.refresh()">
         <span class="row" aria-hidden="true"
           ><span class="fit-line"
-            ><span class="split">@for (c of first; track $index) {<span class="ch">{{ c }}</span>}</span></span
+            ><span class="split">@for (c of first(); track $index) {<span class="ch">{{ c }}</span>}</span></span
           ></span
         >
         <span class="row" aria-hidden="true"
           ><span class="fit-line"
-            ><span class="split outline">@for (c of last; track $index) {<span class="ch">{{ c }}</span>}</span
+            ><span class="split outline">@for (c of last(); track $index) {<span class="ch">{{ c }}</span>}</span
             ><span class="split dot"><span class="ch">.</span></span></span
           ></span
         >
@@ -24,16 +24,16 @@
 
       <div class="hero-bottom">
         <p class="lede">
-          I build web apps end to end.<br />Right now that means
+          {{ t().hero.lede1 }}<br />{{ t().hero.lede2 }}
           <!-- The typewriter is visual only; screen readers get one stable sentence instead. -->
-          <span class="type" aria-hidden="true">Angular front ends</span><span class="tcaret" aria-hidden="true"></span
-          ><span class="sr-only">Angular front ends, .NET 9 back ends, real business rules and apps people actually use.</span>
+          <span class="type" aria-hidden="true">{{ t().hero.phrases[0] }}</span><span class="tcaret" aria-hidden="true"></span
+          ><span class="sr-only">{{ t().hero.srPhrases }}</span>
         </p>
         <div class="btns">
-          <a appBtn variant="solid" icon="down" href="#work">See my work</a>
+          <a appBtn variant="solid" icon="down" href="#work">{{ t().hero.seeWork }}</a>
           <a appBtn icon="arrow" [href]="links.github">GitHub</a>
-          <a appBtn icon="linkedin" [href]="links.linkedin" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in a new tab)">LinkedIn</a>
-          <a appBtn variant="wa" icon="wa" [href]="links.whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp (opens in a new tab)">WhatsApp</a>
+          <a appBtn icon="linkedin" [href]="links.linkedin" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'LinkedIn ' + t().common.newTab">LinkedIn</a>
+          <a appBtn variant="wa" icon="wa" [href]="links.whatsapp" target="_blank" rel="noopener" [attr.aria-label]="'WhatsApp ' + t().common.newTab">WhatsApp</a>
         </div>
       </div>
     </div>
@@ -56,8 +56,8 @@
   </div>
 
   <div class="wrap hero-strip mono">
-    <span>Building with <b>Angular 20 + .NET 9</b></span>
-    <span class="hide-sm"><b>04</b> projects · <b>04</b> live demos</span>
-    <span class="scroll-hint">Scroll to explore <i aria-hidden="true"></i></span>
+    <span>{{ t().hero.strip1 }} <b dir="ltr">Angular 20 + .NET 9</b></span>
+    <span class="hide-sm"><b>04</b> {{ t().hero.projects }} · <b>04</b> {{ t().hero.demos }}</span>
+    <span class="scroll-hint">{{ t().hero.scroll }} <i aria-hidden="true"></i></span>
   </div>
 </section>

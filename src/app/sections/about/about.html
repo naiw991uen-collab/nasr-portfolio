@@ -9,19 +9,19 @@
             sizes="(max-width: 472px) calc(100vw - 32px), 440px"
             width="800"
             height="1000"
-            alt="Portrait of Nasr Mohamed"
+            [alt]="t().about.portraitAlt"
             loading="lazy"
             decoding="async"
           />
         </div>
-        <figcaption><b>Nasr Mohamed</b><span>Full-stack developer</span></figcaption>
+        <figcaption><b>{{ t().about.name }}</b><span>{{ t().about.role }}</span></figcaption>
         <app-badge class="badge" pathId="badge-about" />
       </figure>
 
       <div>
-        <p class="mono kicker">( About )</p>
+        <p class="mono kicker">{{ t().about.kicker }}</p>
         <p class="about-text">
-          @for (s of segments; track $index) {
+          @for (s of segments(); track $index) {
             @if (s.em) {
               <em>@for (w of s.words; track $index) {<span class="w">{{ w }}</span>}</em>
             } @else {
@@ -33,7 +33,7 @@
     </div>
 
     <div class="facts">
-      @for (f of facts; track f[0]) {
+      @for (f of facts(); track $index) {
         <div class="fact"><span>{{ f[0] }}</span><span>{{ f[1] }}</span></div>
       }
     </div>

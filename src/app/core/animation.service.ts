@@ -27,7 +27,14 @@ export class AnimationService {
 
   private _enabled: boolean | null = null;
   private lenis: Lenis | null = null;
-  private introParts: { order: number; part: IntroPart }[] = [];
+  /** Intro parts by order; registering the same order again replaces the part. */
+  private readonly introParts = new Map<number, IntroPart>();
+  private _introBuilt = false;
+
+  /** True once the loader has built the intro timeline (later registrations are ignored). */
+  get introBuilt(): boolean {
+    return this._introBuilt;
+  }
   private refreshTimer?: ReturnType<typeof setTimeout>;
 
   /** Motion allowed (browser + no reduced-motion preference). Lazily sets everything up. */
@@ -163,7 +170,40 @@ export class AnimationService {
   refresh(): void {
     if (!this._enabled) return;
     clearTimeout(this.refreshTimer);
-    this.refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 120);
+    this.refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+      // Layout settled: put the held element back where the visitor saw it.
+      if (this.applyAnchor()) ScrollTrigger.update();
+    }, 120);
+  }
+
+  private anchor?: { el: Element; top: number; until: number };
+
+  /**
+   * Keeps `el` at `top` px from the viewport top through the layout changes of the next
+   * ~1.5 s (language switch: other text heights, and the Work pin rebuilt for the other
+   * direction, which briefly removes its scroll distance from the page).
+   */
+  holdInView(el: Element, top: number): void {
+    this.anchor = { el, top, until: performance.now() + 1500 };
+    this.applyAnchor();
+    this.refresh();
+  }
+
+  /** Scrolls so the held element is back in place. Returns true when it scrolled. */
+  private applyAnchor(): boolean {
+    const a = this.anchor;
+    if (!a) return false;
+    if (performance.now() > a.until || !a.el.isConnected) {
+      this.anchor = undefined;
+      return false;
+    }
+    const d = a.el.getBoundingClientRect().top - a.top;
+    if (Math.abs(d) < 1) return false;
+    const y = scrollY + d;
+    if (this.lenis) this.lenis.scrollTo(y, { immediate: true, force: true });
+    else scrollTo(0, y);
+    return true;
   }
 
   /**
@@ -189,13 +229,14 @@ export class AnimationService {
 
   /** Register a piece of the hero intro. Lower `order` is added first (it may define labels later parts use). */
   registerIntro(order: number, part: IntroPart): void {
-    this.introParts.push({ order, part });
+    if (!this._introBuilt) this.introParts.set(order, part);
   }
 
   /** Called by the loader: builds the intro from every registered part. */
   buildIntro(): gsap.core.Timeline {
+    this._introBuilt = true;
     const tl = gsap.timeline();
-    [...this.introParts].sort((a, b) => a.order - b.order).forEach((p) => p.part(tl));
+    [...this.introParts].sort((a, b) => a[0] - b[0]).forEach(([, part]) => part(tl));
     return tl;
   }
 }

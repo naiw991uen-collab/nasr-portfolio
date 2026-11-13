@@ -1,13 +1,8 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, afterNextRender, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, afterNextRender, computed, inject } from '@angular/core';
 import { gsap } from 'gsap';
 import { AnimationService } from '../../core/animation.service';
+import { I18nService } from '../../core/i18n.service';
 import { Badge } from '../../shared/badge/badge';
-
-const SEGMENTS: readonly { text: string; em: boolean }[] = [
-  { text: 'I like the moment when messy business rules turn into', em: false },
-  { text: 'clean, layered code', em: true },
-  { text: 'that a cashier or a hungry visitor can use without thinking about it.', em: false },
-];
 
 @Component({
   selector: 'app-about',
@@ -18,21 +13,19 @@ const SEGMENTS: readonly { text: string; em: boolean }[] = [
 })
 export class About implements OnDestroy {
   private readonly anim = inject(AnimationService);
+  private readonly i18n = inject(I18nService);
+  protected readonly t = this.i18n.t;
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private ctx?: gsap.Context;
+  /** The statement words: re-created for every language, so their tween is rebuilt. */
+  private wordsCtx?: gsap.Context;
 
   constructor() {
     afterNextRender(() => {
       if (!this.anim.enabled) return;
+      this.animateWords();
       this.ctx = gsap.context(() => {
-        const text = this.host.querySelector('.about-text')!;
         const portrait = this.host.querySelector('.portrait')!;
-
-        // Statement words light up one by one while scrolling through.
-        gsap.fromTo(text.querySelectorAll('.w'), { opacity: 0.18 }, {
-          opacity: 1, stagger: 0.05, ease: 'none',
-          scrollTrigger: { trigger: text, start: 'top 80%', end: 'bottom 45%', scrub: true },
-        });
         gsap.from('.fact', { y: 24, duration: 0.9, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '.facts', start: 'top 88%' } });
 
         // Portrait: frame wipes up, photo zooms out while scrolling.
@@ -46,18 +39,34 @@ export class About implements OnDestroy {
         });
       }, this.host);
     });
+
+    this.i18n.afterLangChange(() => {
+      if (!this.anim.enabled) return;
+      this.wordsCtx?.revert();
+      this.animateWords();
+    });
+  }
+
+  /** Statement words light up one by one while scrolling through. */
+  private animateWords(): void {
+    this.wordsCtx = gsap.context(() => {
+      const text = this.host.querySelector('.about-text')!;
+      gsap.fromTo(text.querySelectorAll('.w'), { opacity: 0.18 }, {
+        opacity: 1, stagger: 0.05, ease: 'none',
+        scrollTrigger: { trigger: text, start: 'top 80%', end: 'bottom 45%', scrub: true },
+      });
+    }, this.host);
   }
 
   ngOnDestroy(): void {
+    this.wordsCtx?.revert();
     this.ctx?.revert();
   }
 
-  // Words are split up front so phase 4 can light them up one by one.
-  protected readonly segments = SEGMENTS.map((s) => ({ em: s.em, words: s.text.split(/\s+/) }));
-  protected readonly facts = [
-    ['Front end', 'Angular 20 · Signals · RxJS'],
-    ['Back end', 'ASP.NET Core 9 · Identity'],
-    ['Architecture', '3 layers · Unit of Work'],
-    ['Data', 'EF Core · SQLite'],
-  ] as const;
+  // Words are split up front so they can light up one by one (whole words, so Arabic stays joined).
+  // The middle part of the sentence is highlighted.
+  protected readonly segments = computed(() =>
+    this.t().about.text.map((text, i) => ({ em: i === 1, words: text.split(/\s+/) })),
+  );
+  protected readonly facts = computed(() => this.t().about.facts);
 }

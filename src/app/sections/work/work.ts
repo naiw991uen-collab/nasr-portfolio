@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, afterNextRender, computed, inject, signal } from '@angular/core';
 import { gsap } from 'gsap';
 import { AnimationService } from '../../core/animation.service';
+import { I18nService } from '../../core/i18n.service';
+import { Dict } from '../../i18n/en';
 import { LEVELUP_ROOMS, PROJECTS, Project, Room } from '../../data/projects';
 import { ScrambleDirective } from '../../core/scramble.directive';
 import { Button } from '../../shared/button/button';
@@ -53,11 +55,31 @@ export class Work implements OnDestroy {
   protected readonly copied = signal<string | null>(null);
   private copiedTimer?: ReturnType<typeof setTimeout>;
 
+  protected readonly i18n = inject(I18nService);
+  protected readonly t = this.i18n.t;
+
+  /** Translated texts of one project card. */
+  protected text(p: Project): Dict['work']['projects']['levelup'] {
+    return (this.t().work.projects as Record<string, Dict['work']['projects']['levelup']>)[p.slug];
+  }
+
+  protected projectOf(i: number): string {
+    return this.i18n.fmt(this.t().work.projectOf, { n: i + 1, total: this.projects.length });
+  }
+
   protected loginFields(p: Project) {
+    const w = this.t().work;
     return [
-      { key: `${p.slug}-id`, label: p.login.idLabel, value: p.login.id },
-      { key: `${p.slug}-pw`, label: 'Password', value: p.login.password },
+      { key: `${p.slug}-id`, label: p.login.idLabel === 'Email' ? w.email : w.username, value: p.login.id },
+      { key: `${p.slug}-pw`, label: w.password, value: p.login.password },
     ];
+  }
+
+  /** "Copy username" / "Username copied" (English lower-cases the field; German nouns keep their capital). */
+  protected copyAria(key: string, label: string): string {
+    const w = this.t().work;
+    if (this.copied() === key) return this.i18n.fmt(w.fieldCopied, { field: label });
+    return this.i18n.fmt(w.copyField, { field: this.i18n.lang() === 'en' ? label.toLowerCase() : label });
   }
 
   protected async copy(key: string, value: string, el: HTMLElement): Promise<void> {
@@ -90,7 +112,17 @@ export class Work implements OnDestroy {
       this.ctx = gsap.context(() => this.anim.revealTitles(this.host), this.host);
       this.animateCards();
     });
+
+    // Only the reading direction changes the animations (the slide goes the other way);
+    // English <-> German only swaps text, so ScrollTrigger just re-measures.
+    this.i18n.afterLangChange(() => {
+      if (!this.anim.enabled || this.builtRtl === this.i18n.rtl()) return;
+      this.mm?.revert();
+      this.animateCards();
+    });
   }
+
+  private builtRtl = false;
 
   private animateCards(): void {
     const q = <T extends Element = HTMLElement>(s: string) => Array.from(this.host.querySelectorAll<T>(s));
@@ -98,6 +130,8 @@ export class Work implements OnDestroy {
     const track = q('.work-track')[0];
     const bar = q('.work-progress i')[0];
     const panels = q('.panel');
+    // Right-to-left: the first card is on the right and the row slides right to reveal the rest.
+    const rtl = (this.builtRtl = this.i18n.rtl());
     const wipe = (screen: Element, trigger: Element, start: string) =>
       gsap.fromTo(
         screen,
@@ -115,7 +149,7 @@ export class Work implements OnDestroy {
       const top = () => Math.max(innerHeight * 0.08, this.anim.navHeight());
 
       const slide = gsap.to(track, {
-        x: () => -dist(),
+        x: () => (rtl ? dist() : -dist()),
         ease: 'none',
         scrollTrigger: {
           trigger: pin,
@@ -132,9 +166,9 @@ export class Work implements OnDestroy {
       panels.forEach((p) =>
         gsap.from(p.querySelector('.screen'), {
           scale: 0.85,
-          rotate: -3,
+          rotate: rtl ? 3 : -3,
           ease: 'none',
-          scrollTrigger: { trigger: p, containerAnimation: slide, start: 'left right', end: 'center center', scrub: true },
+          scrollTrigger: { trigger: p, containerAnimation: slide, start: rtl ? 'right left' : 'left right', end: 'center center', scrub: true },
         }),
       );
       // Screens wipe open when the row arrives.

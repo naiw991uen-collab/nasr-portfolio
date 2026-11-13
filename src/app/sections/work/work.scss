@@ -239,7 +239,7 @@
     width: 100%;
     background: var(--accent);
     transform: scaleX(0);
-    transform-origin: left;
+    transform-origin: var(--start);
   }
 }
 
@@ -249,4 +249,10 @@
   .panel { width: 100%; grid-template-columns: 1fr; min-height: 0; }
   .panel-info { padding: 28px; }
   .work-progress { display: none; }
+}
+
+// Arabic: titles need more line height (taller letters); the mono labels read better a size up.
+:host-context([lang="ar"]) {
+  .panel h3 { line-height: 1.2; }
+  .dl-title, .dl-label { font-size: 12px; }
 }

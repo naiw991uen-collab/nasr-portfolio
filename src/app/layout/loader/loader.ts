@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { gsap } from 'gsap';
 import { AnimationService } from '../../core/animation.service';
+import { I18nService } from '../../core/i18n.service';
 
 const LOGS = ['compiling angular components', 'starting .NET 9 services', 'seeding 4 projects', 'warming up animations', 'ready'];
 const SAFETY_TIMEOUT_MS = 6000;
@@ -22,6 +23,7 @@ const SAFETY_TIMEOUT_MS = 6000;
 })
 export class Loader implements OnDestroy {
   private readonly anim = inject(AnimationService);
+  protected readonly t = inject(I18nService).t;
   /** Rendered in the prerendered HTML so it covers the page before JS boots. */
   protected readonly visible = signal(true);
 

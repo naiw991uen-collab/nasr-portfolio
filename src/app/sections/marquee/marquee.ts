@@ -8,7 +8,7 @@ import { AnimationService } from '../../core/animation.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <!-- Decorative: the same technologies are listed in the Stack section. -->
-    <div class="marquee" aria-hidden="true">
+    <div class="marquee" aria-hidden="true" dir="ltr">
       <div class="marquee-track">
         <!-- Two copies so the loop in phase 4 is seamless. -->
         @for (copy of [0, 1]; track copy) {

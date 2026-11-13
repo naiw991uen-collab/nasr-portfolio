@@ -18,6 +18,8 @@ export class ScrambleDirective implements OnDestroy {
   private raf = 0;
   private leaveTimer?: ReturnType<typeof setTimeout>;
   private active = false;
+  /** A scramble is running (the text on screen is not the real text). */
+  private running = false;
 
   constructor() {
     afterNextRender(() => {
@@ -39,8 +41,13 @@ export class ScrambleDirective implements OnDestroy {
 
   private readonly enter = () => {
     clearTimeout(this.leaveTimer);
+    // Arabic letters join: random Latin glyphs in between would break the word apart.
+    if (document.documentElement.lang === 'ar') return;
+    // The text can change (language switch): read it again unless a scramble is on screen.
+    if (!this.running) this.original = this.el.textContent ?? '';
     cancelAnimationFrame(this.raf);
     const fin = this.original;
+    this.running = true;
     const t0 = performance.now();
     const frame = (now: number) => {
       const p = Math.min((now - t0) / DURATION, 1);
@@ -49,17 +56,21 @@ export class ScrambleDirective implements OnDestroy {
         [...fin].map((c, i) => (i < done || c === ' ' ? c : GLYPHS[(Math.random() * GLYPHS.length) | 0])).join(''),
       );
       if (p < 1) this.raf = requestAnimationFrame(frame);
-      else this.write(fin);
+      else {
+        this.write(fin);
+        this.running = false;
+      }
     };
     this.raf = requestAnimationFrame(frame);
   };
 
   private readonly leave = () => {
     this.leaveTimer = setTimeout(() => {
-      if (this.el.textContent !== this.original) {
+      if (this.running) {
         cancelAnimationFrame(this.raf);
         this.write(this.original);
       }
+      this.running = false;
     }, 450);
   };
 
@@ -69,6 +80,6 @@ export class ScrambleDirective implements OnDestroy {
     clearTimeout(this.leaveTimer);
     this.el.removeEventListener('pointerenter', this.enter);
     this.el.removeEventListener('pointerleave', this.leave);
-    this.write(this.original);
+    if (this.running) this.write(this.original);
   }
 }

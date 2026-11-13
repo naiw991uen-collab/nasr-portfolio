@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, afterNextRender, inject } from '@angular/core';
 import { gsap } from 'gsap';
 import { AnimationService } from '../../core/animation.service';
+import { I18nService } from '../../core/i18n.service';
 import { TiltDirective } from '../../core/tilt.directive';
 
 @Component({
@@ -10,14 +11,14 @@ import { TiltDirective } from '../../core/tilt.directive';
   template: `
     <section class="sec stack-sec" id="stack">
       <div class="wrap">
-        <div class="head"><h2 class="h2 reveal-title"><span class="line"><span>Toolbox</span></span></h2></div>
+        <div class="head"><h2 class="h2 reveal-title"><span class="line"><span>{{ t().stack.title }}</span></span></h2></div>
         <div class="stack">
-          @for (t of tiles; track t.label) {
+          @for (tile of tiles; track $index) {
             <div class="tile" appTilt>
-              <span class="mono">{{ t.label }}</span>
+              <span class="mono">{{ t().stack.labels[$index] }}</span>
               <ul>
-                @for (i of t.items; track i) {
-                  <li>{{ i }}</li>
+                @for (i of tile.items; track i) {
+                  <li dir="ltr">{{ i }}</li>
                 }
               </ul>
             </div>
@@ -54,10 +55,12 @@ export class Stack implements OnDestroy {
     this.ctx?.revert();
   }
 
+  protected readonly t = inject(I18nService).t;
+  // Labels come from the translations (same index); technology names stay as they are.
   protected readonly tiles = [
-    { label: 'Front end', items: ['Angular', 'TypeScript', 'RxJS', 'Bootstrap 5'] },
-    { label: 'Back end', items: ['C#', 'ASP.NET Core MVC', 'AutoMapper', 'FluentValidation'] },
-    { label: 'Data', items: ['EF Core', 'SQLite', 'Repositories', 'Serilog'] },
-    { label: 'Ship', items: ['Git & GitHub', 'GitHub Pages', 'MonsterASP.NET', 'VS Code'] },
+    { items: ['Angular', 'TypeScript', 'RxJS', 'Bootstrap 5'] },
+    { items: ['C#', 'ASP.NET Core MVC', 'AutoMapper', 'FluentValidation'] },
+    { items: ['EF Core', 'SQLite', 'Repositories', 'Serilog'] },
+    { items: ['Git & GitHub', 'GitHub Pages', 'MonsterASP.NET', 'VS Code'] },
   ];
 }

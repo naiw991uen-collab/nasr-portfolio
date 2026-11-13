@@ -95,7 +95,8 @@
 
   .btn {
     --h: 54px;
-    padding: 0 7px 0 22px;
+    padding-block: 0;
+    padding-inline: 22px 7px;
     gap: 12px;
     font-size: 15px;
 
@@ -114,7 +115,7 @@
 }
 
 @container (max-width: 345px) {
-  .hero .btns .btn { padding-left: 16px; gap: 8px; font-size: 14px; }
+  .hero .btns .btn { padding-inline-start: 16px; gap: 8px; font-size: 14px; }
 }
 
 .lede {
@@ -132,7 +133,7 @@
   height: 1.05em;
   background: var(--accent2);
   vertical-align: -.15em;
-  margin-left: 2px;
+  margin-inline-start: 2px;
   animation: blink 1s steps(1) infinite;
 }
 
@@ -168,7 +169,7 @@
 
   .badge {
     position: absolute;
-    left: -42%;
+    inset-inline-start: -42%;
     top: 38%;
     width: clamp(96px, 9vw, 140px);
     pointer-events: auto;
@@ -240,6 +241,13 @@
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; gap: 8px; }
   .hero-me { order: -1; height: 42svh; }
-  .hero-me .badge { left: auto; right: -60%; top: 20%; width: 90px; }
+  .hero-me .badge { inset-inline-start: auto; inset-inline-end: -60%; top: 20%; width: 90px; }
   .hero-strip .hide-sm { display: none; }
+}
+
+// Arabic: the name is two words (no letter split) and its letters are taller than Latin
+// capitals, so the clipped rows need more height or dots and descenders get cut off.
+:host-context([lang="ar"]) {
+  .name { line-height: 1.35; }
+  .name .row { padding-bottom: .08em; }
 }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, afterNextRen
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AnimationService } from '../../core/animation.service';
+import { I18nService } from '../../core/i18n.service';
 
 @Component({
   selector: 'app-numbers',
@@ -9,9 +10,9 @@ import { AnimationService } from '../../core/animation.service';
   template: `
     <section class="sec numbers">
       <div class="wrap nums">
-        @for (n of nums; track n.label) {
+        @for (n of nums; track $index) {
           <!-- Final value is in the HTML (no JS / reduced motion); with motion it counts up from 00. -->
-          <div class="num"><b [attr.data-to]="n.to">{{ pad(n.to) }}</b><span>{{ n.label }}</span></div>
+          <div class="num"><b [attr.data-to]="n.to">{{ pad(n.to) }}</b><span>{{ t().numbers[$index] }}</span></div>
         }
       </div>
     </section>
@@ -29,11 +30,8 @@ export class Numbers implements OnDestroy {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private ctx?: gsap.Context;
 
-  protected readonly nums = [
-    { to: 4, label: 'projects on GitHub' },
-    { to: 4, label: 'live demos you can open now' },
-    { to: 3, label: "layers in LevelUp's architecture" },
-  ];
+  protected readonly t = inject(I18nService).t;
+  protected readonly nums = [{ to: 4 }, { to: 4 }, { to: 3 }];
   protected pad(n: number): string {
     return String(n).padStart(2, '0');
   }

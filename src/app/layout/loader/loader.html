@@ -1,5 +1,5 @@
 @if (visible()) {
-  <div class="loader" #root role="status" aria-label="Loading portfolio">
+  <div class="loader" #root role="status" [attr.aria-label]="t().loader.aria" dir="ltr">
     <div class="ld-cols back" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
     <div class="ld-cols front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
     <div class="ld-ui" aria-hidden="true">

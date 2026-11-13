@@ -36,7 +36,7 @@
 
   figcaption {
     position: absolute;
-    left: 22px;
+    inset-inline-start: 22px;
     bottom: 20px;
     z-index: 1;
     display: flex;
@@ -49,11 +49,11 @@
 
   .badge {
     position: absolute;
-    right: -28px;
+    inset-inline-end: -28px;
     top: -28px;
     width: 120px;
 
-    @media (max-width: 860px) { right: -8px; }
+    @media (max-width: 860px) { inset-inline-end: -8px; }
   }
 }
 
@@ -69,9 +69,12 @@
   max-width: 1100px;
   text-wrap: balance;
 
-  .w { display: inline-block; margin-right: .22em; }
+  .w { display: inline-block; margin-inline-end: .22em; }
   em { font-style: normal; color: var(--accent); }
 }
+
+// Arabic: words keep their joined letters (split by word only) but need a taller line.
+:host-context([lang="ar"]) .about-text { line-height: 1.5; }
 
 .facts {
   display: grid;
@@ -88,5 +91,5 @@
   border-top: 1px solid var(--line);
 
   span:first-child { color: var(--muted); }
-  span:last-child { text-align: right; }
+  span:last-child { text-align: end; }
 }

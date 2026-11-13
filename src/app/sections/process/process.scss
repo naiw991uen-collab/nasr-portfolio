@@ -57,3 +57,6 @@
 
   @media (max-width: 760px) { grid-template-columns: 1fr; align-items: start; min-height: 0; }
 }
+
+// Arabic: taller letters need more line height in the card titles.
+:host-context([lang="ar"]) .scard h3 { line-height: 1.35; }

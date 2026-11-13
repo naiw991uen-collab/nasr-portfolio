@@ -1,11 +1,11 @@
 <section class="sec contact" id="contact">
   <div class="wrap">
-    <p class="mono kicker">( Contact )</p>
+    <p class="mono kicker">{{ t().contact.kicker }}</p>
 
-    <h2 class="big" aria-label="Let's build something." appFitText [fitMax]="200" (fitted)="anim.refresh()">
+    <h2 class="big" [attr.aria-label]="t().contact.bigAria" appFitText [fitMax]="i18n.rtl() ? 120 : 200" (fitted)="anim.refresh()">
       <span class="fit-line" aria-hidden="true"
         ><span class="hov">
-          @for (w of line1; track $index) {
+          @for (w of lines()[0]; track $index) {
             @if (!$first) {
               {{ ' ' }}
             }
@@ -13,19 +13,26 @@
           }
         </span></span
       ><br /><span class="fit-line" aria-hidden="true"
-        ><span class="hov"><span class="wd">@for (c of line2; track $index) {<span class="ch">{{ c }}</span>}</span></span
+        ><span class="hov">
+          @for (w of lines()[1]; track $index) {
+            @if (!$first) {
+              {{ ' ' }}
+            }
+            <span class="wd">@for (c of w; track $index) {<span class="ch">{{ c }}</span>}</span>
+          }
+        </span
         ><span class="period">.</span></span
       >
     </h2>
 
     <div class="mail">
-      <span class="mail-label mono">Email me</span>
-      <code #mail>{{ email }}</code>
+      <span class="mail-label mono">{{ t().contact.emailMe }}</span>
+      <code #mail dir="ltr">{{ email }}</code>
       <button appBtn variant="solid" icon="copy" type="button" (click)="copy()">
         <span aria-live="polite">{{ copyLabel() }}</span>
       </button>
-      <a appBtn icon="down" [href]="cv" download="Nasr-Mohamed-CV.pdf" aria-label="Download CV (PDF)">Download CV</a>
-      <a appBtn icon="linkedin" [href]="linkedin" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in a new tab)">LinkedIn</a>
+      <a appBtn icon="down" [href]="cv" download="Nasr-Mohamed-CV.pdf" [attr.aria-label]="t().common.cvAria">{{ t().contact.cv }}</a>
+      <a appBtn icon="linkedin" [href]="linkedin" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'LinkedIn ' + t().common.newTab">LinkedIn</a>
     </div>
   </div>
 </section>

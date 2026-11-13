@@ -127,7 +127,7 @@ a {
     color: var(--accent);
     letter-spacing: 0;
     vertical-align: top;
-    margin-left: 8px;
+    margin-inline-start: 8px;
   }
 }
 
@@ -153,6 +153,13 @@ html.lenis body { height: auto; }
 [lang="ar"],
 [lang="ar"] * { letter-spacing: 0 !important; }
 
+// Arabic letters are taller than Latin capitals (dots, descenders): the tight display
+// line-heights and clipped reveal lines need more room, or the glyphs get cut off.
+:root[lang="ar"] {
+  .h2 { line-height: 1.25; }
+  .h2 .line { padding-bottom: .06em; }
+}
+
 // Custom cursor active (fine pointers only): hide the system cursor.
 @media (pointer: fine) {
   body.has-cursor,
@@ -177,7 +184,7 @@ html.lenis body { height: auto; }
 .skip-link {
   position: fixed;
   top: 12px;
-  left: 12px;
+  inset-inline-start: 12px;
   z-index: 110; // above the loader
   padding: 12px 18px;
   border-radius: 999px;

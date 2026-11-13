@@ -19,12 +19,16 @@
 
   .wd { display: inline-block; white-space: nowrap; }
 
+  // No transform transition until the wave-in is done: GSAP reads the letters' resting
+  // transform, and a running CSS transition made it record a mid-way value (letters stuck low).
   .ch {
     display: inline-block;
-    transition: transform .5s var(--ease), color .3s;
+    transition: color .3s;
 
     &:hover { transform: translateY(-12%) rotate(-4deg); color: var(--accent); }
   }
+
+  &.ready .ch { transition: transform .5s var(--ease), color .3s; }
 
   .period { color: var(--accent); }
 }
@@ -51,3 +55,6 @@
 }
 
 .mail-label { flex-basis: 100%; color: var(--muted); }
+
+// Arabic: taller letters need more line height in the big heading.
+:host-context([lang="ar"]) .big { line-height: 1.3; }

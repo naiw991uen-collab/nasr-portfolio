@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, afterNextRender, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, afterNextRender, computed, effect, inject } from '@angular/core';
 import { gsap } from 'gsap';
 import { AnimationService } from '../../core/animation.service';
 import { FitTextDirective } from '../../core/fit-text.directive';
+import { I18nService } from '../../core/i18n.service';
 import { ThemeService } from '../../core/theme.service';
 import { AuroraCanvas } from './aurora-canvas';
 import { LINKS } from '../../data/projects';
@@ -25,11 +26,15 @@ export class Hero implements OnDestroy {
   private typeTimer?: ReturnType<typeof setTimeout>;
   private onPointer?: (e: PointerEvent) => void;
 
+  protected readonly i18n = inject(I18nService);
+  protected readonly t = this.i18n.t;
   protected readonly links = LINKS;
-  // Split into chars so each letter can rise on its own.
-  protected readonly first = [...'Nasr'];
-  protected readonly last = [...'Mohamed'];
-  private static readonly PHRASES = ['Angular front ends', '.NET 9 back ends', 'real business rules', 'apps people actually use'];
+  // Split so each piece can rise on its own: letters, or whole words in Arabic.
+  protected readonly first = computed(() => this.i18n.split(this.t().hero.first));
+  protected readonly last = computed(() => this.i18n.split(this.t().hero.last));
+
+  /** Pointer tilt lives in its own context: its targets (.name, .hero-me) never change. */
+  private pointerCtx?: gsap.Context;
 
   constructor() {
     // Palette switch → canvas re-reads the accent colours.
@@ -47,17 +52,25 @@ export class Hero implements OnDestroy {
         if (motion) this.typewriter();
       });
       if (!motion) return;
-      this.ctx = gsap.context(() => {
-        this.animate();
-        if (this.anim.finePointer) this.pointerEffects();
-      }, this.host);
+      this.ctx = gsap.context(() => this.animate(), this.host);
+      if (this.anim.finePointer) this.pointerCtx = gsap.context(() => this.pointerEffects(), this.host);
+    });
+
+    // New language: the name pieces were re-created, so rebuild their tweens; restart the typewriter.
+    this.i18n.afterLangChange(() => {
+      if (!this.anim.enabled) return;
+      clearTimeout(this.typeTimer);
+      this.zone.runOutsideAngular(() => this.typewriter());
+      this.ctx?.revert();
+      this.ctx = gsap.context(() => this.animate(), this.host);
     });
   }
 
   /** "Right now that means …" deletes and types four phrases in a loop (timings from the reference). */
   private typewriter(): void {
     const el = this.host.querySelector<HTMLElement>('.type')!;
-    const words = Hero.PHRASES;
+    const words = this.t().hero.phrases;
+    el.textContent = words[0];
     let wi = 0;
     let ci = words[0].length;
     let deleting = true;
@@ -108,10 +121,13 @@ export class Hero implements OnDestroy {
     const chars = q('.name .ch');
     const me = q('.hero-me')[0];
 
-    // Letters wait below their row until the loader leaves.
-    gsap.set(chars, { yPercent: 110, rotate: 8 });
+    // Letters wait below their row until the loader leaves (skipped when rebuilt after the intro).
+    if (!this.anim.introBuilt) {
+      gsap.set(chars, { yPercent: 110, rotate: 8 });
+    }
 
     // Intro, timed exactly like the reference (positions relative to the previous tween).
+    // Registering again (new language before the intro) replaces the earlier part.
     this.anim.registerIntro(0, (tl) => {
       tl.to(chars, { yPercent: 0, rotate: 0, duration: 1.2, ease: 'expo.out', stagger: 0.035 }, 0)
         .addLabel('heroText', '-=.9')
@@ -129,12 +145,15 @@ export class Hero implements OnDestroy {
     // Portrait sinks and shrinks slightly.
     gsap.to(me, { yPercent: 12, scale: 0.94, ease: 'none', scrollTrigger: { ...scrollOut, scrub: true } });
 
-    // Letters fly apart from the middle.
+    // Letters fly apart from the middle. Right-to-left, the first piece is on the right: mirror.
+    // Arabic pieces are whole words, so they travel further.
     const mid = (chars.length - 1) / 2;
+    const side = this.i18n.rtl() ? -1 : 1;
+    const step = this.i18n.lang() === 'ar' ? 56 : 28;
     gsap.to(chars, {
-      x: (i: number) => (i - mid) * 28,
+      x: (i: number) => (i - mid) * step * side,
       y: (i: number) => Math.abs(i - mid) * -10,
-      skewY: (i: number) => (i - mid) * 2,
+      skewY: (i: number) => (i - mid) * 2 * side,
       immediateRender: false,
       ease: 'none',
       scrollTrigger: { ...scrollOut, scrub: 0.6 },
@@ -146,5 +165,6 @@ export class Hero implements OnDestroy {
     if (this.onPointer) removeEventListener('pointermove', this.onPointer);
     this.aurora?.destroy();
     this.ctx?.revert();
+    this.pointerCtx?.revert();
   }
 }

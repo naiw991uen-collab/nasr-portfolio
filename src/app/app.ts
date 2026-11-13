@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, afterNextRender, inject } from '@angular/core';
+import { I18nService } from './core/i18n.service';
 import { Cursor } from './layout/cursor/cursor';
 import { Footer } from './layout/footer/footer';
 import { Loader } from './layout/loader/loader';
@@ -18,7 +19,7 @@ import { Work } from './sections/work/work';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="grain" aria-hidden="true"></div>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main">{{ i18n.t().common.skip }}</a>
     <app-loader />
     <app-cursor />
     <app-nav />
@@ -35,4 +36,11 @@ import { Work } from './sections/work/work';
     <app-footer />
   `,
 })
-export class App {}
+export class App {
+  protected readonly i18n = inject(I18nService);
+
+  constructor() {
+    // The prerendered page is English: switch to a saved language once hydration is done.
+    afterNextRender(() => this.i18n.restore());
+  }
+}

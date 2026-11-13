@@ -1,4 +1,5 @@
 import { Directive, ElementRef, OnDestroy, afterNextRender, inject, input, output } from '@angular/core';
+import { I18nService } from './i18n.service';
 
 /**
  * Sizes a heading so its widest line fits the parent's content box.
@@ -38,6 +39,12 @@ export class FitTextDirective implements OnDestroy {
         this.raf = requestAnimationFrame(() => this.fit());
       });
       this.ro.observe(box);
+    });
+
+    // New language: new text, maybe a new font (Arabic). Fit now, and again once that font is in.
+    inject(I18nService).afterLangChange(() => {
+      this.fit();
+      document.fonts?.ready.then(() => this.fit());
     });
   }
 

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, afterNextRen
 import { gsap } from 'gsap';
 import { AnimationService } from '../../core/animation.service';
 import { FitTextDirective } from '../../core/fit-text.directive';
+import { I18nService } from '../../core/i18n.service';
 import { LINKS } from '../../data/projects';
 
 @Component({
@@ -12,16 +13,16 @@ import { LINKS } from '../../data/projects';
     <footer class="site-foot">
       <div class="wrap">
         <div class="foot">
-          <span>© 2026 Nasr Mohamed</span>
-          <nav aria-label="Elsewhere">
+          <span>{{ t().footer.copy }}</span>
+          <nav [attr.aria-label]="t().footer.elsewhere">
             <a [href]="links.github">GitHub</a>
-            <a [href]="links.linkedin" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in a new tab)">LinkedIn</a>
-            <a href="#top">Back to top ↑</a>
+            <a [href]="links.linkedin" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'LinkedIn ' + t().common.newTab">LinkedIn</a>
+            <a href="#top">{{ t().footer.top }}</a>
           </nav>
         </div>
       </div>
       <div class="giant" aria-hidden="true" appFitText [fitRatio]="0.94" [fitMax]="150" (fitted)="anim.refresh()">
-        <span class="fit-line">Nasr Mohamed</span>
+        <span class="fit-line">{{ t().footer.giant }}</span>
       </div>
     </footer>
   `,
@@ -32,6 +33,8 @@ import { LINKS } from '../../data/projects';
     .foot a { text-decoration: none; }
     .foot a:hover { color: var(--fg); }
     .giant { font-family: var(--display); font-weight: 800; font-size: clamp(34px, 7.6vw, 150px); line-height: .9; letter-spacing: -.07em; text-transform: uppercase; white-space: nowrap; color: transparent; -webkit-text-stroke: 1.5px var(--muted); opacity: .5; margin: 40px 0 24px; text-align: center; user-select: none; }
+    /* Arabic: taller letters need more line height. */
+    :host-context([lang="ar"]) .giant { line-height: 1.3; color: var(--muted); -webkit-text-stroke: 0; opacity: .22; }
   `,
 })
 export class Footer implements OnDestroy {
@@ -39,6 +42,7 @@ export class Footer implements OnDestroy {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private ctx?: gsap.Context;
   protected readonly links = LINKS;
+  protected readonly t = inject(I18nService).t;
 
   constructor() {
     afterNextRender(() => {

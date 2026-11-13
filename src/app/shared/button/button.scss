@@ -6,7 +6,8 @@
   align-items: center;
   gap: 14px;
   min-height: var(--h);
-  padding: 0 10px 0 28px;
+  padding-block: 0;
+  padding-inline: 28px 10px;
   border-radius: 999px;
   font: inherit;
   font-size: 17px;
@@ -61,6 +62,11 @@
   &:hover .ico,
   &:focus-visible .ico { background: var(--bg); color: var(--fg); transform: rotate(-45deg); }
 
+  // Right-to-left: the arrow points up-left and turns the other way.
+  &:dir(rtl) .ico .flip { transform: scaleX(-1); }
+  &:dir(rtl):hover .ico,
+  &:dir(rtl):focus-visible .ico { transform: rotate(45deg); }
+
   // Brand logos (LinkedIn) stay upright on hover.
   &:hover .ico:has(.brand),
   &:focus-visible .ico:has(.brand) { transform: none; }
@@ -81,7 +87,7 @@
   &.small {
     --h: 52px;
     font-size: 15px;
-    padding-left: 22px;
+    padding-inline-start: 22px;
     gap: 10px;
 
     .ico { width: 34px; height: 34px; }
